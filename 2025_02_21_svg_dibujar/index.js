@@ -24,3 +24,7 @@ const drawLine = (x1, y1, x2, y2, r, g, b) => {
 for (let i = 0; i < 10; i++) {
   drawLine(0,10*i,100, 10*i, 128, 0, 0);  
 }
+const grid = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+grid.forEach((i) => {
+  drawLine(10*i, 0, 10*i, 100, 0, 128, 0);
+})
