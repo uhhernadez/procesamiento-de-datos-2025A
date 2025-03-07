@@ -1,24 +1,11 @@
 import {select, scaleBand, scaleLinear, axisBottom, axisLeft} from "d3";
-const svg = select("#app").append("svg");
+const svg = select("#app")
+            .append("svg")
+            .append("g")
+            .attr("transform","translate(0, 10)"); 
 
 svg.attr("width", window.innerWidth);
 svg.attr("height", window.innerHeight);
-
-const points = [
-  {x:10, y:20},
-  {x:4, y:5},
-  {x:3, y:6},
-  {x:2, y:7}
-];
-
-points.forEach( (point) => {
-  console.log(point);
-  console.log(point.x);
-  console.log(point.y);
-  point.blasfemia = "Esto es raro";
-} );
-
-console.log(points);
 
 const futbol = {
   "León" : 26,
@@ -27,10 +14,12 @@ const futbol = {
   "Toluca" : 18,
   "Necaxa" : 18
 };
-console.log(futbol);
 
+// Obtiene todas las etiquetas del arreglo
 let keys = Object.keys(futbol);
-let x_axis = scaleBand(keys, [0, 300]);
+
+// Arreglo y un intervalo
+let x_axis = scaleBand(keys, [0, 200]);
 const g_x_axis = svg.append("g")
   .attr("transform", "translate(100, 100)")
   .call(axisBottom(x_axis));
@@ -38,3 +27,18 @@ const g_x_axis = svg.append("g")
 g_x_axis.selectAll("text")
   .attr("transform","rotate(-45)")
   .style("text-anchor","end");
+
+let y_axis = scaleLinear([0, 100], [100,0]);
+const g_y_axis = svg.append("g")
+  .attr("transform","translate(100, 0)")
+  .call(axisLeft(y_axis));
+
+const drawRect = (w, h, x, y, color, svg) => {
+  svg.append("rect")
+  .attr("width",w)
+  .attr("heigh",h)
+  .attr("x",x)
+  .attr("y",y)
+  .attr("fill", color);
+}
+
