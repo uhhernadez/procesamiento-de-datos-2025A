@@ -2,9 +2,9 @@ import {select, scaleBand, scaleLinear, axisBottom, axisLeft} from "d3";
 const svg = select("#app")
             .append("svg")
             .append("g")
-            .attr("transform","translate(0, 10)"); 
+            .attr("transform","translate(30, 10)"); 
 
-svg.attr("width", window.innerWidth);
+            svg.attr("width", window.innerWidth);
 svg.attr("height", window.innerHeight);
 
 const futbol = {
@@ -21,7 +21,7 @@ let keys = Object.keys(futbol);
 // Arreglo y un intervalo
 let x_axis = scaleBand(keys, [0, 200]);
 const g_x_axis = svg.append("g")
-  .attr("transform", "translate(100, 100)")
+  .attr("transform", "translate(0, 100)")
   .call(axisBottom(x_axis));
 
 g_x_axis.selectAll("text")
@@ -30,15 +30,22 @@ g_x_axis.selectAll("text")
 
 let y_axis = scaleLinear([0, 100], [100,0]);
 const g_y_axis = svg.append("g")
-  .attr("transform","translate(100, 0)")
+  .attr("transform","translate(0, 0)")
   .call(axisLeft(y_axis));
 
 const drawRect = (w, h, x, y, color, svg) => {
   svg.append("rect")
   .attr("width",w)
-  .attr("heigh",h)
+  .attr("height",h)
   .attr("x",x)
   .attr("y",y)
   .attr("fill", color);
 }
 
+const urlBall = "https://c1.klipartz.com/pngpicture/135/703/sticker-png-soccer-ball-football-sports-own-goal-symbol-sports-equipment-pallone-circle.png"
+
+
+let values = Object.values(futbol);
+keys.forEach((key,index)=>{
+  drawRect(20, values[index], x_axis(key)+10, 100-values[index], "#4EC749FF", svg);
+});
