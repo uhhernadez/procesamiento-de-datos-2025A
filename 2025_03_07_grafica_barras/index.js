@@ -44,8 +44,18 @@ const drawRect = (w, h, x, y, color, svg) => {
 
 const urlBall = "https://c1.klipartz.com/pngpicture/135/703/sticker-png-soccer-ball-football-sports-own-goal-symbol-sports-equipment-pallone-circle.png"
 
+const drawImage = (w,h,x,y,svg) => {
+  svg.append("image")
+  .attr("width",w)
+  .attr("height",h)
+  .attr("x",x)
+  .attr("y",y)
+  .attr("href",urlBall)
+}
+
 
 let values = Object.values(futbol);
 keys.forEach((key,index)=>{
   drawRect(20, values[index], x_axis(key)+10, 100-values[index], "#4EC749FF", svg);
+  drawImage(20, 20, x_axis(key)+10, 100-values[index]-20, svg)
 });
