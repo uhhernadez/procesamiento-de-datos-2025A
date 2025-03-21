@@ -1,4 +1,6 @@
-import {select, scaleBand, scaleLinear, axisBottom, axisLeft} from "d3";
+//import * as d3 from 'https://esm.run/d3';
+//console.log(d3);
+import {select, scaleBand, scaleLinear, axisBottom, axisLeft} from "https://esm.run/d3";
 const svg = select("#app")
             .append("svg")
             .append("g")
