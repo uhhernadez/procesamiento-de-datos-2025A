@@ -1,5 +1,5 @@
 import {select, scaleBand, axisBottom, 
-        axisLeft, scaleSequential,interpolateInferno } from "https://esm.run/d3";
+        axisLeft, scaleSequential,interpolateInferno, interpolateTurbo } from "https://esm.run/d3";
 const svg = select("#app")
             .append("svg")
             .attr("width", 500)
@@ -21,7 +21,7 @@ const g_y_axis = svg.append("g")
   .call(axisLeft(y_axis));
 
 const colorScale = scaleSequential()
-        .interpolator(interpolateInferno)
+        .interpolator(interpolateTurbo)
         .domain([0, 100]);
 
 const data = [
@@ -36,6 +36,18 @@ const data = [
   {x:2, y:2, z:0},
 ];        
 
+const tooltip = select("#app")
+  .append("div")
+  .style("opacity", 0)
+  .style("class", "tooltip")
+  .style("background-color", "white")
+  .style("border", "solid")
+  .style("border-width", "2px")
+  .style("border-radius", "5px")
+  .style("position", "absolute")
+  .style("padding", "5px");
+
+
 data.forEach((value)=>{
   const {x, y, z} = value;
   const width = x_axis.bandwidth();
@@ -45,5 +57,15 @@ data.forEach((value)=>{
     .attr("y",y * height)
     .attr("fill", colorScale(z))
     .attr("width", 100)
-    .attr("height", 100);
+    .attr("height", 100)
+    .attr("stroke", "white")
+    .attr("stroke-width", 5)
+    .attr("rx",15)
+    .on("mouseover", (event)=> {
+      console.log(event);
+      tooltip.style("opacity", 1)
+      tooltip.html("El valor es "+ z)
+      .style("left", event.x + "px")
+      .style("top", event.y + "px");
+    })
 });
