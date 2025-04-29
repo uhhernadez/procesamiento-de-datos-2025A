@@ -1,3 +1,4 @@
-import {urlBall} from "barchart";
+import {drawBarChart} from "barchart";
 
-console.log(urlBall)
+drawBarChart("app");
+drawBarChart("barchart");
