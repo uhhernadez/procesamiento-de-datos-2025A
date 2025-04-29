@@ -5,13 +5,17 @@ const svg = select("#app")
             .attr("width", 500)
             .attr("height", 500);
 
-//const projection = geoEqualEarth().center([-100.963, 22.185]).scale(1000).translate([0, 1000]);
-const projection = geoMercator().center([-95.963, 22.185, ]).scale(2000);
+//const projection = geoEqualEarth().center([-89.963, 15.185, ]).scale(2000);
+const projection = geoMercator().center([-89.963, 15.185, ]).scale(2000);
 
 const geoGenerator = geoPath().projection(projection);
 const urlSanLuisPotosi = "https://raw.githubusercontent.com/PhantomInsights/mexico-geojson/refs/heads/main/2023/states/San%20Luis%20Potos%C3%AD.json";
 const urlZacatecas = "https://raw.githubusercontent.com/PhantomInsights/mexico-geojson/refs/heads/main/2023/states/Zacatecas.json";
-const state = await json(urlZacatecas);
+const urlOaxaca = "https://raw.githubusercontent.com/PhantomInsights/mexico-geojson/refs/heads/main/2023/states/Oaxaca.json";
+
+const state = await json(urlOaxaca);
+projection.fitExtent([[0, 0], [500, 500]], state); 
+
 console.log(state.features)
 svg.append("g")
     .selectAll("path")
