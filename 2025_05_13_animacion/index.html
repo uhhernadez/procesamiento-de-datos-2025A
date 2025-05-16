@@ -1,0 +1,136 @@
+<!DOCTYPE html> 
+<html lang="es"> 
+<head> 
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>D3.js Animaciones - Intro</title> 
+    <script src="https://d3js.org/d3.v7.min.js"></script> 
+    <style> 
+        svg { 
+            border: 1px solid lightgray; 
+            display: block; /* Para centrar si se usa margin auto */ 
+            margin: 20px auto; /* Centrar el SVG */ 
+        } 
+        body { 
+            font-family: sans-serif; 
+            text-align: center; /* Centrar el título y otros elementos */ 
+        } 
+    </style> 
+</head> 
+<body>
+  <h1>Mi Primera Animación con D3.js</h1> 
+  <svg id="lienzoAnimacion" width="600" height="300"></svg> 
+
+  <script> 
+      // Aquí irá nuestro código D3 
+
+      // Seleccionar el contenedor SVG 
+      const svg = d3.select("#lienzoAnimacion"); 
+      const anchoSVG = +svg.attr("width"); // El + convierte a número 
+      const altoSVG = +svg.attr("height"); 
+
+      const circulo = svg.append("circle") 
+                      .attr("cx", 50) 
+                      .attr("cy", altoSVG / 2) // Centrado verticalmente 
+                      .attr("r", 30) .attr("fill", "steelblue");
+
+      const t1 = new Date().getTime();
+      setTimeout(() => {
+        circulo.transition() // Iniciar la transición
+        .duration(1500) // Duración de 1.5 segundos
+        .attr("r", 60) // Nuevo radio
+        .attr("fill", "#1A0F0FFF"); // Nuevo color
+      }, 2000); // Esperar 1 segundo antes de iniciar la animación
+      
+      const t2 = new Date().getTime();
+      
+      circulo.transition()
+        .delay(500) // Pequeño retraso inicial
+        .duration(1000)
+        .attr("r", 60);
+      const t3 = new Date().getTime();
+      console.log("setTimeout: ", t2 - t1);
+      console.log("delay d3  : ", t3 - t2);
+
+      circulo.transition()
+        .duration(1000)
+        .attr("fill", "firebrick")
+        .attr("cx", anchoSVG); // Mover al lado derecho
+
+        const circuloEncadenado = svg.append("circle")
+    .attr("cx", 50)
+    .attr("cy", altoSVG / 2 + 50) // Un poco más abajo para no superponer
+    .attr("r", 20)
+    .attr("fill", "green");
+
+    setTimeout(() => {
+        circuloEncadenado.transition() // Transición 1: Mover
+            .duration(1000)
+            .attr("cx", anchoSVG / 2) // Mover al centro
+          .transition()           // Transición 2: Crecer (comienza después de la 1)
+            .duration(1000)
+            .attr("r", 40)
+          .transition()           // Transición 3: Cambiar color (comienza después de la 2)
+            .duration(1000)
+            .attr("fill", "purple");
+    }, 500);
+    const circuloEase1 = svg.append("circle")
+    .attr("cx", 100).attr("cy", 50).attr("r", 15).attr("fill", "orange");
+const circuloEase2 = svg.append("circle")
+    .attr("cx", 200).attr("cy", 50).attr("r", 15).attr("fill", "cyan");
+const circuloEase3 = svg.append("circle")
+    .attr("cx", 300).attr("cy", 50).attr("r", 15).attr("fill", "magenta");
+
+const destinoY = altoSVG - 50;
+
+  setTimeout(() => {
+      circuloEase1.transition()
+          .duration(2000)
+          .ease(d3.easeLinear) // Movimiento constante
+          .attr("cy", destinoY);
+
+      circuloEase2.transition()
+          .duration(2000)
+          .ease(d3.easeBounceOut) // Efecto de rebote al final
+          .attr("cy", destinoY);
+
+      circuloEase3.transition()
+          .duration(2000)
+          .ease(d3.easeElasticOut.amplitude(1.5).period(0.5)) // Efecto elástico, se puede configurar
+          .attr("cy", destinoY);
+  }, 500);
+// Tomar uno de los círculos anteriores o crear uno nuevo
+const circuloEvento = svg.append("circle")
+    .attr("cx", 50)
+    .attr("cy", altoSVG - 200) // Nueva posición
+    .attr("r", 25)
+    .attr("fill", "teal");
+
+// Añadir un elemento de texto para mostrar mensajes
+const mensaje = svg.append("text")
+    .attr("x", anchoSVG / 2)
+    .attr("y", 20)
+    .attr("text-anchor", "middle")
+    .text("Esperando animación...");
+
+setTimeout(() => {
+    circuloEvento.transition()
+        .duration(1500)
+        .attr("cx", anchoSVG - 50) // Mover al lado derecho
+        .on("start", function() {
+            // 'this' es el elemento DOM del círculo
+            d3.select(this).attr("fill", "gold");
+            mensaje.text("Animación iniciada...");
+            console.log("Animación del círculo 'evento' iniciada.");
+        })
+        .on("end", function() {
+            d3.select(this).attr("fill", "crimson");
+            mensaje.text("¡Animación completada!");
+            console.log("El círculo 'evento' terminó de moverse.");
+        });
+}, 500);
+
+
+  </script> 
+</body> 
+</html>  

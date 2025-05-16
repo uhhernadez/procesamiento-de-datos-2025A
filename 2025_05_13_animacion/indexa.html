@@ -1,0 +1,118 @@
+<!DOCTYPE html> 
+<html lang="es"> 
+<head> 
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>D3.js Animaciones - Intro</title> 
+    <script src="https://d3js.org/d3.v7.min.js"></script> 
+    <style> 
+        svg { 
+            border: 1px solid lightgray; 
+            display: block; /* Para centrar si se usa margin auto */ 
+            margin: 20px auto; /* Centrar el SVG */ 
+        } 
+        body { 
+            font-family: sans-serif; 
+            text-align: center; /* Centrar el título y otros elementos */ 
+        } 
+    </style> 
+</head> 
+<body>
+  <h1>Mi Primera Animación con D3.js</h1> 
+  <svg id="lienzoAnimacion" width="600" height="300"></svg> 
+
+  <script> 
+      // Aquí irá nuestro código D3 
+
+      // Seleccionar el contenedor SVG 
+      const svg = d3.select("#lienzoAnimacion"); 
+      const anchoSVG = +svg.attr("width"); // El + convierte a número 
+      const altoSVG = +svg.attr("height"); 
+     
+let datosGrafica = [
+    { id: 'a', valor: 10, color: 'skyblue' },
+    { id: 'b', valor: 25, color: 'tomato' },
+    { id: 'c', valor: 18, color: 'limegreen' }
+];
+
+const escalaX = d3.scaleBand() // Para espaciar los círculos
+    .domain(datosGrafica.map(d => d.id))
+    .range([50, anchoSVG - 50])
+    .padding(0.5);
+
+function actualizarGrafica(nuevosDatos) {
+    // Actualizar el dominio de la escala si los IDs cambian
+    escalaX.domain(nuevosDatos.map(d => d.id));
+
+    const seleccion = svg.selectAll("circle.dataPoint")
+        .data(nuevosDatos, d => d.id); // ¡Importante usar una key function!
+
+    seleccion.join(
+        enter => enter.append("circle")
+            .attr("class", "dataPoint") // Clase para seleccionar solo estos círculos
+            .attr("cx", d => escalaX(d.id) + escalaX.bandwidth() / 2)
+            .attr("cy", altoSVG) // Iniciar desde abajo
+            .attr("r", 0) // Iniciar con radio 0
+            .attr("fill", d => d.color)
+            .style("opacity", 0) // Iniciar transparente
+            .call(enterSelection => enterSelection.transition() // Transición para los elementos que entran
+                .duration(750)
+                .delay((d, i) => i * 100) // Retraso escalonado para la entrada
+                .attr("cy", altoSVG / 2) // Mover a la posición Y final
+                .attr("r", d => d.valor) // Radio final
+                .style("opacity", 1)), // Hacer visible
+        update => update
+            .call(updateSelection => updateSelection.transition() // Transición para elementos que se actualizan
+                .duration(750)
+                .delay((d, i) => i * 50)
+                .attr("cx", d => escalaX(d.id) + escalaX.bandwidth() / 2) // Actualiza posición X
+                .attr("r", d => d.valor) // Actualiza radio
+                .attr("fill", d => d.color)), // Actualiza color
+        exit => exit
+            .call(exitSelection => exitSelection.transition() // Transición para elementos que salen
+                .duration(750)
+                .attr("cy", altoSVG) // Mover hacia abajo
+                .attr("r", 0) // Se encogen hasta desaparecer
+                .style("opacity", 0) // Hacer transparente
+                .remove()) // Se eliminan DESPUÉS de la transición
+    );
+}
+
+// Llamada inicial
+actualizarGrafica(datosGrafica);
+
+// Simular actualización de datos después de un tiempo
+// Botones para interactividad
+d3.select("body").append("button").text("Actualizar Datos 1").on("click", () => {
+    datosGrafica = [
+        { id: 'a', valor: 22, color: 'blue' },      // 'a' se actualiza
+        // 'b' se elimina
+        { id: 'c', valor: 12, color: 'darkgreen' }, // 'c' se actualiza
+        { id: 'd', valor: 30, color: 'gold' }       // 'd' es nuevo
+    ];
+    actualizarGrafica(datosGrafica);
+});
+
+d3.select("body").append("button").text("Actualizar Datos 2").on("click", () => {
+    datosGrafica = [
+        { id: 'e', valor: 15, color: 'purple' },    // 'e' es nuevo
+        { id: 'd', valor: 20, color: 'orange' },    // 'd' se actualiza
+        { id: 'a', valor: 5, color: 'navy' }        // 'a' se actualiza
+    ];
+    actualizarGrafica(datosGrafica);
+});
+
+ d3.select("body").append("button").text("Resetear").on("click", () => {
+    datosGrafica = [
+        { id: 'a', valor: 10, color: 'skyblue' },
+        { id: 'b', valor: 25, color: 'tomato' },
+        { id: 'c', valor: 18, color: 'limegreen' }
+    ];
+    actualizarGrafica(datosGrafica);
+});
+
+
+
+  </script> 
+</body> 
+</html>  
