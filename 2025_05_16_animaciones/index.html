@@ -1,0 +1,28 @@
+<html>
+  <head>
+    <title>d3 ejemplo</title>
+    <script type="importmap" >
+      {
+        "imports": {
+          "barchart": "./barchart.js?module"
+        }
+      }
+    </script>
+        <style> 
+        svg { 
+            border: 1px solid lightgray; 
+            display: block; /* Para centrar si se usa margin auto */ 
+            margin: 20px auto; /* Centrar el SVG */ 
+        } 
+        body { 
+            font-family: sans-serif; 
+            text-align: center; /* Centrar el título y otros elementos */ 
+        } 
+    </style> 
+  </head>
+  <body>
+    <div id="app"></div>
+    <div id="barchart"></div>
+  </body>
+  <script type="module" src="index.js"  /> </script>
+</html>
