@@ -1,4 +1,4 @@
-import {select, scaleOrdinal, pie, arc, interpolate} from "https://esm.run/d3";
+import {select, scaleOrdinal, pie, arc, interpolate,easeElasticOut} from "https://esm.run/d3";
 const svg = select("#app")
             .append("svg")
             .append("g")
@@ -14,12 +14,11 @@ const pieObj = pie().value((d) => d[1] );
 const pie_data = pieObj(Object.entries(data));
 
 pie_data.forEach((data,index) => {
-  console.log(data);
   const objArc = arc()
     .innerRadius(10)
     .outerRadius(50)
     .startAngle(data.startAngle)
-    .endAngle(0)
+//    .endAngle(data.startAngle)
   
   const p = svg.append("path")
     .datum(data)
@@ -31,16 +30,32 @@ pie_data.forEach((data,index) => {
     p.transition()
     .duration(2000)
     .attrTween("d", (d) => {
-      console.log("Data: ", d);
-      const val = interpolate(data.starAngle, data.endAngle);
       return (t) => {
+        const val = interpolate(d.startAngle, d.endAngle);
         console.log(val(t));
         const objArc = arc()
           .innerRadius(10)
           .outerRadius(50)
-          .startAngle(data.startAngle)
+          .startAngle(d.startAngle)
           .endAngle(val(t));
-        return objArc;
+        return objArc();
+      }
+    })
+    
+    p.transition()
+    .delay(2000)
+    .duration(2000)
+    .attrTween("d", (d) => {
+      return (t) => {
+        const val = interpolate(d.endAngle, d.startAngle);
+        console.log(val(t));
+        const objArc = arc()
+          .innerRadius(10)
+          .outerRadius(50)
+          .startAngle(val(t))
+          .endAngle(d.endAngle);
+        return objArc();
       }
     }) 
+
 });
