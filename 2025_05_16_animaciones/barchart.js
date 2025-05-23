@@ -67,21 +67,28 @@ keys.forEach((key,index)=>{
   .duration(2000)
   .attr("x", x_axis(key)+10)
   .attr("fill", "#FF0000")
-  
-  const img = drawImage(20, 20, x_axis(key)+10, 20, svg)
-  img.transition()
-  .duration(2000)
-  .ease(easeElasticOut.amplitude(2).period(0.5))
-  .attr("y", 100-values[index]-20)
  
-  //const rotacion = "rotate(180 " + (x_axis(key)+10 )+ "," + (100-values[index]-20) + ")";
-  //console.log(rotacion)
-  
-  //img.transition()
-  //.delay(2000)
-  //.duration(2000)
-  //.attr("transform", "rotate(180 " + (x_axis(key)+10 )+ " , " + (100-values[index]-20) + ")")
-});
+  const x = x_axis(key)+10;
+  const y = 100-values[index]-20;
+  const img = drawImage(20, 20, x , 20, svg)
+//  img.transition()
+//  .duration(2000)
+//  .ease(easeElasticOut.amplitude(2).period(0.5))
+//  .attr("y", y)
+ 
+  const rotacion = "rotate(180 ," + (x+10) + ", " + (20) + ")";
+  console.log(rotacion)
+  img.transition()
+    .delay(2500)
+    .duration(2000)
+    .attr("transform", rotacion)
+
+  svg.append("circle")
+      .attr("r",5)
+      .attr("cx",x+10)
+      .attr("cy",20)
+
+  });
 
 
 
