@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPA: Comprendiendo la Capacidad de Atención</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F9FA; /* Very Light Gray */
+            color: #343A40; /* Dark Gray */
+        }
+        .hero-bg {
+            background-color: #007BFF; /* Classic Blue */
+        }
+        .accent-color {
+            color: #007BFF; /* Classic Blue */
+        }
+        .accent-bg {
+            background-color: #007BFF; /* Classic Blue */
+        }
+        .highlight-color {
+            color: #F39C12; /* Soft Orange - Placeholder, using main accent for now to keep palette minimal */
+        }
+        .card {
+            background-color: #FFFFFF; /* White */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+            padding: 1.5rem; /* p-6 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* max-w-2xl */
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; /* Adjusted height */
+            max-height: 350px; /* Adjusted max-height */
+        }
+        .stat-big-number {
+            font-size: 3rem; /* text-5xl */
+            font-weight: 700; /* font-bold */
+            color: #007BFF; /* Classic Blue */
+        }
+        .section-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #343A40; /* Dark Gray */
+            margin-bottom: 1rem; /* mb-4 */
+            text-align: center;
+        }
+        .section-intro {
+            font-size: 1.125rem; /* text-lg */
+            color: #6C757D; /* Medium Gray */
+            margin-bottom: 2rem; /* mb-8 */
+            text-align: center;
+            max-width: 768px; /* max-w-3xl */
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            transition: background-color 0.3s ease;
+            font-weight: 600;
+        }
+        .nav-link:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+        .table-responsive {
+            overflow-x: auto;
+        }
+        /* Custom scrollbar for better aesthetics if needed, but Tailwind usually handles this well */
+    </style>
+    <!-- Visualization & Content Choices: 
+        Report Info: "Tiempo promedio dedicado a una sola pantalla" (150s en 2004 -> 47s en 2023). Goal: Show change. Viz/Method: Chart.js Bar Chart. Interaction: Tooltips. Justification: Visualiza claramente la disminución. Lib/Method: Chart.js (Canvas).
+        Report Info: Stats (8.25s atención internet, 23-25 min para reenfocar). Goal: Inform. Viz/Method: HTML/Tailwind "Big Number" Stat Cards. Interaction: None needed. Justification: Destaca cifras clave. Lib/Method: HTML/CSS.
+        Report Info: Tipos de Atención. Goal: Organize/Inform. Viz/Method: HTML/Tailwind styled cards with Unicode icons. Interaction: Hover effects. Justification: Claridad y fácil digestión. Lib/Method: HTML/CSS.
+        Report Info: Factores (Digital, Estilo de Vida, etc.). Goal: Inform/Organize. Viz/Method: HTML/Tailwind styled cards with Unicode icons. Interaction: Hover effects. Justification: Presenta información compleja de forma segmentada y visual. Lib/Method: HTML/CSS.
+        Report Info: Tabla 1 (Capacidad de atención por edad). Goal: Inform/Compare. Viz/Method: HTML/Tailwind styled cards. Interaction: None. Justification: Presenta datos tabulares de forma más atractiva que una tabla simple. Lib/Method: HTML/CSS.
+        Report Info: Tabla 2 (Factores Clave). Goal: Organize/Inform. Viz/Method: HTML/Tailwind grid of cards, grouped by category. Interaction: None. Justification: Mejora la legibilidad y el atractivo visual de los datos tabulares. Lib/Method: HTML/CSS.
+        NO SVG/Mermaid used. -->
+    </head>
+<body class="antialiased">
+
+    <nav class="hero-bg text-white sticky top-0 z-50 shadow-lg">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="font-bold text-xl">Capacidad de Atención</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#introduccion" class="nav-link">Introducción</a>
+                        <a href="#que-es" class="nav-link">¿Qué es?</a>
+                        <a href="#tipos" class="nav-link">Tipos</a>
+                        <a href="#factores-desafiantes" class="nav-link">Factores</a>
+                        <a href="#resumen-factores" class="nav-link">Resumen</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                        <span class="sr-only">Abrir menú principal</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#introduccion" class="block nav-link text-base">Introducción</a>
+                <a href="#que-es" class="block nav-link text-base">¿Qué es?</a>
+                <a href="#tipos" class="block nav-link text-base">Tipos</a>
+                <a href="#factores-desafiantes" class="block nav-link text-base">Factores</a>
+                <a href="#resumen-factores" class="block nav-link text-base">Resumen</a>
+            </div>
+        </div>
+    </nav>
+
+    <header id="introduccion" class="hero-bg text-white py-16 sm:py-24">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight">
+                Tu Capacidad de Atención:
+                <span class="block">El Héroe Anónimo del Éxito</span>
+            </h1>
+            <p class="mt-6 text-lg sm:text-xl max-w-3xl mx-auto">
+                Descubre qué es la atención, por qué es crucial para tus estudios y cómo diversos factores pueden influir en tu concentración diaria.
+            </p>
+            <div class="mt-10">
+                <div class="inline-block bg-white text-gray-800 rounded-lg shadow-xl p-6">
+                    <p class="text-sm uppercase tracking-wider font-semibold">Atención en Internet (Adulto Promedio)</p>
+                    <p class="stat-big-number">8.25 <span class="text-2xl">segundos</span></p>
+                    <p class="text-xs text-gray-600">Una disminución desde 12 segundos en el año 2000.</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        
+        <section id="que-es" class="my-16 scroll-mt-20">
+            <h2 class="section-title">¿Qué es la Capacidad de Atención?</h2>
+            <p class="section-intro">
+                Es la cantidad de tiempo que puedes concentrarte en una tarea sin distraerte. Lejos de ser un rasgo fijo, es una habilidad dinámica y fundamental para el aprendizaje, la memoria y tu rendimiento académico.
+            </p>
+            <div class="grid md:grid-cols-2 gap-8 items-start">
+                <div class="card">
+                    <h3 class="text-2xl font-semibold accent-color mb-3">Definición e Importancia</h3>
+                    <p class="mb-4">La capacidad de atención es una medida de concentración sostenida, un recurso mental crucial. Permite un enfoque indiviso, variando entre personas y fluctuando según la edad o el entorno. Para los estudiantes, comprenderla es el primer paso para mejorarla.</p>
+                    <p class="mb-4">Una atención robusta se correlaciona con mejor rendimiento académico, absorción efectiva de información, compromiso con materiales complejos y óptimo desempeño en evaluaciones. Es la base para el aprendizaje permanente.</p>
+                    <p><strong>Idea Clave:</strong> La atención no es fija, ¡se puede desarrollar y fortalecer!</p>
+                </div>
+                <div class="card">
+                    <h3 class="text-2xl font-semibold accent-color mb-3">Capacidad de Atención Promedio (Guía General)</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-semibold text-lg">👶 Niños</h4>
+                            <p class="text-sm text-gray-700">2-3 minutos por año de edad. Ej: ~30 seg. para 7 años (tarea específica).</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-lg">🧑 Adolescentes</h4>
+                            <p class="text-sm text-gray-700">Aumenta con la edad. Ej: 14 años (28-42 min), 16 años (32-48 min) en tareas atractivas.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-lg">🧑‍🎓 Adultos Jóvenes</h4>
+                            <p class="text-sm text-gray-700">Generalmente la más fuerte. Ej: ~76 seg. (prueba CPT específica).</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-lg">🌐 Adulto (Internet)</h4>
+                            <p class="text-sm text-gray-700">~8.25 seg. (vs 12 seg. en 2000). Tiempo en una pantalla: ~47 seg.</p>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-xs text-gray-600">Nota: Estas son guías generales. La atención real depende de la tarea y es variable. La cifra de "8.25 segundos" se refiere a atención no solicitada en entornos digitales distractores, no a tu potencial de concentración voluntaria.</p>
+                </div>
+            </div>
+        </section>
+
+        <hr class="my-16 border-gray-300">
+
+        <section id="tipos" class="my-16 scroll-mt-20">
+            <h2 class="section-title">Tipos de Atención que Usas a Diario</h2>
+            <p class="section-intro">
+                La atención es multifacética. Conocer sus diferentes formas te ayudará a entender mejor cómo funciona tu concentración y cómo puedes mejorarla en distintos contextos académicos.
+            </p>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="card hover:shadow-lg transition-shadow duration-300">
+                    <div class="text-4xl mb-3 accent-color">🎯</div>
+                    <h3 class="text-xl font-semibold mb-2">Atención Enfocada (Sostenida)</h3>
+                    <p class="text-sm">Capacidad de concentrarse en una única tarea por un tiempo prolongado. Esencial para el "trabajo profundo" como estudiar temas complejos o escribir ensayos.</p>
+                </div>
+                <div class="card hover:shadow-lg transition-shadow duration-300">
+                    <div class="text-4xl mb-3 accent-color">🧐</div>
+                    <h3 class="text-xl font-semibold mb-2">Atención Selectiva</h3>
+                    <p class="text-sm">Habilidad para filtrar distracciones irrelevantes y enfocarse en un estímulo particular, como escuchar al profesor en un aula ruidosa.</p>
+                </div>
+                <div class="card hover:shadow-lg transition-shadow duration-300">
+                    <div class="text-4xl mb-3 accent-color">⚖️</div>
+                    <h3 class="text-xl font-semibold mb-2">Atención Dividida</h3>
+                    <p class="text-sm">Intentar enfocarse en múltiples tareas a la vez (ej. tomar notas y escuchar). ¡Ojo! La multitarea real suele ser un mito y puede ser ineficiente.</p>
+                </div>
+                <div class="card hover:shadow-lg transition-shadow duration-300">
+                    <div class="text-4xl mb-3 accent-color">🧠</div>
+                    <h3 class="text-xl font-semibold mb-2">Control Atencional (Ejecutiva)</h3>
+                    <p class="text-sm">Capacidad de cambiar el foco conscientemente entre tareas y gestionar los recursos atencionales. Es el "director" de tu atención.</p>
+                </div>
+            </div>
+            <p class="text-center mt-8 text-gray-700">Reconocer estos tipos te permite identificar qué demanda cada tarea académica y dónde enfocar tus esfuerzos de mejora.</p>
+        </section>
+
+        <hr class="my-16 border-gray-300">
+
+        <section id="factores-desafiantes" class="my-16 scroll-mt-20">
+            <h2 class="section-title">Factores que Desafían Tu Concentración</h2>
+            <p class="section-intro">
+                Tu capacidad para concentrarte no depende solo de tu voluntad. Está influenciada por una compleja mezcla de factores externos e internos que es crucial conocer.
+            </p>
+
+            <div class="mb-12 card">
+                <h3 class="text-2xl font-semibold accent-color mb-4 text-center">📱 La Era Digital: Un Arma de Doble Filo</h3>
+                <p class="mb-6 text-center">La tecnología omnipresente es uno de los mayores desafíos. Las plataformas digitales, con sus notificaciones y contenido adictivo, fragmentan nuestra atención.</p>
+                <div class="grid md:grid-cols-3 gap-6 text-center mb-6">
+                    <div class="p-4 bg-gray-100 rounded-lg">
+                        <p class="stat-big-number">47<span class="text-2xl">s</span></p>
+                        <p class="text-sm text-gray-600">Tiempo promedio en una pantalla antes de cambiar (2023), ¡bajó de 150s en 2004!</p>
+                    </div>
+                    <div class="p-4 bg-gray-100 rounded-lg">
+                        <p class="stat-big-number">8.25<span class="text-2xl">s</span></p>
+                        <p class="text-sm text-gray-600">Atención promedio de un adulto en internet.</p>
+                    </div>
+                    <div class="p-4 bg-gray-100 rounded-lg">
+                        <p class="stat-big-number">23-25<span class="text-2xl">min</span></p>
+                        <p class="text-sm text-gray-600">Tiempo para recuperar concentración tras una interrupción digital.</p>
+                    </div>
+                </div>
+                <div class="chart-container mb-6">
+                    <canvas id="atencionPantallaChart"></canvas>
+                </div>
+                <p class="mb-2"><strong>El Mito de la Multitarea:</strong> Lo que creemos multitarea es en realidad un rápido cambio de tareas, reduciendo la productividad hasta un 40% y aumentando errores. Estudiar con distracciones digitales perjudica el aprendizaje.</p>
+                <p class="text-sm text-gray-600">No obstante, la relación es compleja: no es solo la cantidad de tiempo de pantalla, sino la calidad de la interacción y la susceptibilidad individual lo que impacta la atención.</p>
+            </div>
+
+            <div class="mb-12 card">
+                <h3 class="text-2xl font-semibold accent-color mb-4 text-center">🧘 Saboteadores del Estilo de Vida</h3>
+                <p class="mb-6 text-center">Tu rutina diaria y bienestar general son fundamentales para una mente enfocada.</p>
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="p-4 bg-gray-50 rounded-lg text-center">
+                        <div class="text-4xl mb-2">😴</div>
+                        <h4 class="font-semibold mb-1">Sueño</h4>
+                        <p class="text-xs">La privación afecta concentración, memoria y atención. Dormir bien es crucial.</p>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-lg text-center">
+                        <div class="text-4xl mb-2">😟</div>
+                        <h4 class="font-semibold mb-1">Estrés y Ansiedad</h4>
+                        <p class="text-xs">Altos niveles desvían recursos mentales, dificultando el enfoque en tareas.</p>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-lg text-center">
+                        <div class="text-4xl mb-2">💧</div>
+                        <h4 class="font-semibold mb-1">Nutrición e Hidratación</h4>
+                        <p class="text-xs">Incluso deshidratación leve (1-2%) afecta atención. El cerebro necesita agua (73%) y nutrientes.</p>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-lg text-center">
+                        <div class="text-4xl mb-2">🏃‍♂️</div>
+                        <h4 class="font-semibold mb-1">Actividad Física</h4>
+                        <p class="text-xs">El ejercicio regular mejora atención y función cognitiva. Descansos activos ayudan.</p>
+                    </div>
+                </div>
+                <p class="mt-6 text-sm text-gray-600 text-center">Estos factores interactúan: el uso digital nocturno afecta el sueño, que impacta la atención y puede aumentar el estrés.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="card">
+                    <h3 class="text-2xl font-semibold accent-color mb-3">🏡 Influencias Ambientales</h3>
+                    <p class="mb-2">Un entorno ruidoso, desordenado o distractor dificulta la concentración. Espacios tranquilos, organizados y bien iluminados (idealmente luz natural) la facilitan.</p>
+                    <p class="text-sm"><strong>Consejo:</strong> Crea un espacio de trabajo dedicado exclusivamente al estudio para condicionar tu mente a concentrarse.</p>
+                </div>
+                <div class="card">
+                    <h3 class="text-2xl font-semibold accent-color mb-3">👤 Factores Personales</h3>
+                    <ul class="list-disc list-inside space-y-1 text-sm">
+                        <li><strong>Edad:</strong> La atención se desarrolla, alcanzando su pico en la adultez joven.</li>
+                        <li><strong>Interés:</strong> El interés en la tarea aumenta drásticamente la capacidad de concentración.</li>
+                        <li><strong>Diferencias de Aprendizaje:</strong> Condiciones como TDAH presentan desafíos inherentes para mantener la atención.</li>
+                    </ul>
+                    <p class="mt-3 text-sm">Conocer tu perfil atencional te ayuda a elegir estrategias y buscar apoyo.</p>
+                </div>
+            </div>
+        </section>
+
+        <hr class="my-16 border-gray-300">
+
+        <section id="resumen-factores" class="my-16 scroll-mt-20">
+            <h2 class="section-title">Resumen de Factores Clave (Adaptación de Tabla 2)</h2>
+            <p class="section-intro">
+                Aquí tienes un vistazo a los principales elementos que pueden influir en tu capacidad de atención, agrupados por categoría para una mejor comprensión.
+            </p>
+            <div class="space-y-8">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4 pb-2 border-b-2 border-blue-500 inline-block">🌐 Digital</h3>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="p-4 bg-white rounded shadow">
+                            <h4 class="font-bold text-blue-600">Redes Sociales y Notificaciones</h4>
+                            <p class="text-xs">Ciclos adictivos, interrupciones frecuentes (~23-25 min para reenfocar), entrena cambio rápido de atención.</p>
+                        </div>
+                        <div class="p-4 bg-white rounded shadow">
+                            <h4 class="font-bold text-blue-600">Multitarea (Cambio de Tareas)</h4>
+                            <p class="text-xs">Reduce eficiencia (hasta 40%), aumenta errores, aprendizaje superficial.</p>
+                        </div>
+                        <div class="p-4 bg-white rounded shadow">
+                            <h4 class="font-bold text-blue-600">Tiempo de Pantalla (Naturaleza y Contexto)</h4>
+                            <p class="text-xs">Contenido intenso/cambiante sobrecarga memoria. Calidad de interacción importa.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold mb-4 pb-2 border-b-2 border-green-500 inline-block">❤️ Estilo de Vida</h3>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="p-4 bg-white rounded shadow">
+                            <h4 class="font-bold text-green-600">Privación del Sueño</h4>
+                            <p class="text-xs">Afecta concentración, memoria, toma de decisiones.</p>
+                        </div>
+                        <div class="p-4 bg-white rounded shadow">
+                            <h4 class="font-bold text-green-600">Estrés y Ansiedad</h4>
+                            <p class="text-xs">Desvía recursos mentales, dificulta concentración.</p>
+                        </div>
+                        <div class="p-4 bg-white rounded shadow">
+                            <h4 class="font-bold text-green-600">Mala Nutrición y Deshidratación</h4>
+                            <p class="text-xs">Deshidratación leve (1-2%) afecta atención.</p>
+                        </div>
+                        <div class="p-4 bg-white rounded shadow">
+                            <h4 class="font-bold text-green-600">Falta de Actividad Física</h4>
+                            <p class="text-xs">Menor condición física ligada a peor atención.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold mb-4 pb-2 border-b-2 border-yellow-500 inline-block">🏠 Ambiental</h3>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="p-4 bg-white rounded shadow">
+                            <h4 class="font-bold text-yellow-600">Espacio Ruidoso/Desordenado</h4>
+                            <p class="text-xs">Dificulta filtrar estímulos y mantener concentración.</p>
+                        </div>
+                        <div class="p-4 bg-white rounded shadow">
+                            <h4 class="font-bold text-yellow-600">Falta de Espacio Dedicado</h4>
+                            <p class="text-xs">No hay señales ambientales para enfocar el cerebro.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold mb-4 pb-2 border-b-2 border-purple-500 inline-block">👤 Personal</h3>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="p-4 bg-white rounded shadow">
+                            <h4 class="font-bold text-purple-600">Edad</h4>
+                            <p class="text-xs">Atención se desarrolla con edad, pico en adultez joven.</p>
+                        </div>
+                        <div class="p-4 bg-white rounded shadow">
+                            <h4 class="font-bold text-purple-600">Bajo Interés en Tarea</h4>
+                            <p class="text-xs">Dificulta atención voluntaria; interés la aumenta.</p>
+                        </div>
+                        <div class="p-4 bg-white rounded shadow">
+                            <h4 class="font-bold text-purple-600">Diferencias de Aprendizaje (ej. TDAH)</h4>
+                            <p class="text-xs">Afectan inherentemente regulación de atención, tareas.</p>
+                        </div>
+                         <div class="p-4 bg-white rounded shadow md:col-span-2 lg:col-span-1">
+                            <h4 class="font-bold text-purple-600">Deterioro Cognitivo (ej. lesión cerebral)</h4>
+                            <p class="text-xs">Puede dañar directamente habilidades de atención.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 text-center p-8 mt-16">
+        <p>&copy; <span id="currentYear"></span> SPA sobre Capacidad de Atención. Contenido adaptado de la guía para estudiantes.</p>
+        <p class="text-xs mt-2">Esta aplicación es para fines informativos y educativos.</p>
+    </footer>
+
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const menuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            menuButton.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+        });
+        
+        // Smooth scroll for nav links
+        document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+                if (mobileMenu.classList.contains('hidden') === false) {
+                     mobileMenu.classList.add('hidden');
+                     menuButton.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+                }
+            });
+        });
+        
+        // Chart.js: Tiempo Promedio en una Pantalla
+        const ctxPantalla = document.getElementById('atencionPantallaChart');
+        if (ctxPantalla) {
+            new Chart(ctxPantalla.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['2004', '2023'],
+                    datasets: [{
+                        label: 'Segundos Promedio en Pantalla',
+                        data: [150, 47],
+                        backgroundColor: [
+                            'rgba(0, 123, 255, 0.6)', // Accent Blue with alpha
+                            'rgba(220, 53, 69, 0.6)' // A contrasting color like red with alpha
+                        ],
+                        borderColor: [
+                            'rgba(0, 123, 255, 1)',
+                            'rgba(220, 53, 69, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Segundos'
+                            }
+                        },
+                        x: {
+                             title: {
+                                display: true,
+                                text: 'Año'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false // Hiding legend as it's a simple chart
+                        },
+                        title: {
+                            display: true,
+                            text: 'Disminución del Tiempo Promedio en una Pantalla',
+                            padding: {
+                                top: 10,
+                                bottom: 20
+                            },
+                            font: {
+                                size: 16
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function(tooltipItems) {
+                                    // Default behavior is fine for this chart's labels
+                                    return tooltipItems[0].label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>

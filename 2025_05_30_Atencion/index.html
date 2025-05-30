@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografía: Mejorando la Capacidad de Atención</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8; /* Un gris azulado claro como fondo general */
+        }
+        .palette-red { color: #FF6B6B; }
+        .bg-palette-red { background-color: #FF6B6B; }
+        .border-palette-red { border-color: #FF6B6B; }
+
+        .palette-yellow { color: #FFD166; }
+        .bg-palette-yellow { background-color: #FFD166; }
+        .border-palette-yellow { border-color: #FFD166; }
+
+        .palette-green { color: #06D6A0; }
+        .bg-palette-green { background-color: #06D6A0; }
+        .border-palette-green { border-color: #06D6A0; }
+
+        .palette-blue { color: #118AB2; }
+        .bg-palette-blue { background-color: #118AB2; }
+        .border-palette-blue { border-color: #118AB2; }
+        
+        .palette-navy { color: #073B4C; }
+        .bg-palette-navy { background-color: #073B4C; }
+        .border-palette-navy { border-color: #073B4C; }
+
+        .text-header { color: #073B4C; } /* Dark Navy para encabezados principales */
+        .text-subheader { color: #118AB2; } /* Strong Blue para subencabezados */
+        .text-body { color: #4A5568; } /* Un gris oscuro para el cuerpo del texto */
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; 
+            max-height: 350px;
+        }
+        .chart-container-sm {
+            height: 250px;
+            max-height: 300px;
+        }
+        .stat-card {
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1.1;
+        }
+        .stat-label {
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+        .flowchart-item {
+            border: 2px solid #118AB2; /* palette-blue */
+            background-color: #E0F2FE; /* Light blue bg */
+        }
+        .strategy-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .strategy-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+         .section-divider {
+            height: 4px;
+            width: 80px;
+            margin: 1rem auto;
+        }
+    </style>
+</head>
+<body class="text-body">
+
+    <!-- 
+        Plan de Narrativa y Estructura de la Infografía:
+        Sección 1: Introducción - ¿Qué es la Capacidad de Atención y por qué es crucial para los estudiantes? Visualizaciones: Datos clave de Tabla 1 como "Single Big Numbers", comparativa de atención en internet.
+        Sección 2: Tipos de Atención - Descripción de atención enfocada, selectiva, dividida y control atencional. Visualización: Diagrama HTML/CSS.
+        Sección 3: Factores que Afectan la Concentración - Tecnología, estilo de vida, entorno, factores personales. Visualizaciones: Gráfico de barras para impacto de distractores, datos sobre interrupciones digitales.
+        Sección 4: Consecuencias de una Mente Distraída - Impacto en rendimiento académico, bienestar mental y vida personal. Visualización: Listas estructuradas con iconos.
+        Sección 5: Estrategias para Potenciar la Atención - Mindfulness, técnicas de estudio (Pomodoro, descansos, etc.), optimización del entorno, uso de tecnología, estilo de vida, entrenamiento cerebral. Visualización: Tarjetas informativas con iconos y pequeños diagramas HTML/CSS.
+        Sección 6: Conclusión - Mensaje final sobre cultivar la concentración.
+
+        Selección de Paleta de Colores:
+        Nombre de la paleta: "Energetic & Playful" (Adaptada para legibilidad)
+        Colores principales: #FF6B6B (Rojo Coral), #FFD166 (Amarillo Naranja), #06D6A0 (Verde Teal), #118AB2 (Azul Fuerte), #073B4C (Azul Marino Oscuro).
+        Fondo de página: #F0F4F8
+        Texto principal: #4A5568
+
+        Confirmación de Restricciones:
+        NO se utilizó SVG en ninguna parte de esta infografía.
+        NO se utilizó Mermaid JS para ningún diagrama. Todos los diagramas son HTML/CSS.
+    -->
+
+    <header class="bg-palette-navy text-white p-6 sm:p-10 text-center">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-2">Domina Tu Concentración</h1>
+        <p class="text-lg sm:text-xl text-slate-200">Guía Esencial para Estudiantes sobre la Capacidad de Atención</p>
+    </header>
+
+    <main class="container mx-auto p-4 sm:p-6 md:p-8">
+
+        <section id="introduccion" class="mb-12">
+            <h2 class="text-3xl font-bold text-header text-center mb-2">Tu Capacidad de Atención: El Pilar del Éxito</h2>
+            <div class="section-divider bg-palette-yellow mx-auto"></div>
+            <p class="text-center text-lg mb-8 max-w-3xl mx-auto">La capacidad de atención es el tiempo que puedes concentrarte en una tarea sin distraerte. Es vital para aprender, recordar y rendir académicamente. ¡La buena noticia es que se puede mejorar!</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="stat-card bg-palette-green/10 border-l-4 border-palette-green">
+                    <div class="stat-number text-palette-green">~30 <span class="text-xl">seg</span></div>
+                    <p class="stat-label text-slate-600">Atención (7 años) <br><span class="text-xs">(tarea cognitiva específica)</span></p>
+                </div>
+                <div class="stat-card bg-palette-blue/10 border-l-4 border-palette-blue">
+                    <div class="stat-number text-palette-blue">28-48 <span class="text-xl">min</span></div>
+                    <p class="stat-label text-slate-600">Atención (Adolescentes) <br><span class="text-xs">(tareas atractivas)</span></p>
+                </div>
+                <div class="stat-card bg-palette-yellow/10 border-l-4 border-palette-yellow">
+                    <div class="stat-number text-palette-yellow">~76 <span class="text-xl">seg</span></div>
+                    <p class="stat-label text-slate-600">Atención (Adultos Jóvenes) <br><span class="text-xs">(prueba CPT específica)</span></p>
+                </div>
+                <div class="stat-card bg-palette-red/10 border-l-4 border-palette-red">
+                    <div class="stat-number text-palette-red">8.25 <span class="text-xl">seg</span></div>
+                    <p class="stat-label text-slate-600">Atención Adulto (Internet) <br><span class="text-xs">(vs. 12 seg en 2000)</span></p>
+                </div>
+            </div>
+            <p class="text-sm text-center text-slate-500 mb-8">(Fuente: Datos generales y estudios citados en el informe. La atención varía mucho según la tarea y el individuo.)</p>
+
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-2xl font-semibold text-subheader mb-4 text-center">Atención en la Era Digital: Un Desafío Creciente</h3>
+                <p class="mb-4 text-center">El tiempo promedio dedicado a una sola pantalla antes de cambiar de foco ha disminuido drásticamente.</p>
+                <div class="chart-container chart-container-sm mx-auto">
+                    <canvas id="atencionDigitalChart"></canvas>
+                </div>
+                <p class="text-center mt-4">Esto subraya cómo el entorno digital puede fragmentar nuestra concentración, pero también destaca la importancia de entrenar nuestro enfoque voluntario.</p>
+            </div>
+        </section>
+
+        <section id="tipos-atencion" class="mb-12">
+            <h2 class="text-3xl font-bold text-header text-center mb-2">Los Múltiples Rostros de Tu Concentración</h2>
+            <div class="section-divider bg-palette-green mx-auto"></div>
+            <p class="text-center text-lg mb-8 max-w-3xl mx-auto">La atención no es única; utilizas diferentes tipos en tu día a día académico.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-lg shadow-md p-6 flowchart-item">
+                    <h3 class="text-xl font-semibold text-palette-blue mb-2">🧠 Atención Enfocada (Sostenida)</h3>
+                    <p>Capacidad de concentrarse en una tarea única por un tiempo prolongado. Esencial para estudiar temas complejos o escribir ensayos.</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6 flowchart-item">
+                    <h3 class="text-xl font-semibold text-palette-blue mb-2">🎯 Atención Selectiva</h3>
+                    <p>Habilidad para filtrar distracciones irrelevantes y enfocarse en un estímulo particular, como escuchar al profesor en un aula ruidosa.</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6 flowchart-item">
+                    <h3 class="text-xl font-semibold text-palette-blue mb-2">⚖️ Atención Dividida</h3>
+                    <p>Intentar enfocarse en múltiples tareas simultáneamente (ej. tomar notas y escuchar). Ojo: ¡la multitarea real es a menudo un mito y puede ser ineficiente!</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6 flowchart-item">
+                    <h3 class="text-xl font-semibold text-palette-blue mb-2">⚙️ Control Atencional (Ejecutiva)</h3>
+                    <p>Capacidad de cambiar el foco conscientemente entre tareas y gestionar los recursos atencionales. Es el "director" de tu atención.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="factores" class="mb-12">
+            <h2 class="text-3xl font-bold text-header text-center mb-2">¡Cuidado! Enemigos de Tu Concentración</h2>
+            <div class="section-divider bg-palette-red mx-auto"></div>
+            <p class="text-center text-lg mb-8 max-w-3xl mx-auto">Diversos factores, tanto internos como externos, pueden sabotear tu capacidad de atención.</p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-2xl font-semibold text-subheader mb-4 text-center">Impacto de los Distractores Comunes</h3>
+                    <div class="chart-container mx-auto">
+                        <canvas id="factoresImpactoChart"></canvas>
+                    </div>
+                     <p class="text-sm text-center text-slate-500 mt-2">(Valores ilustrativos basados en la importancia discutida en el informe)</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-2xl font-semibold text-subheader mb-1 text-center">El Costo de las Interrupciones Digitales</h3>
+                    <div class="text-center my-4">
+                        <span class="text-5xl font-bold text-palette-red">23-25</span>
+                        <p class="text-xl text-slate-700">minutos</p>
+                        <p class="text-md text-slate-600">Es el tiempo aproximado que puedes tardar en recuperar la concentración total después de una interrupción digital.</p>
+                    </div>
+                    <ul class="space-y-3 text-left">
+                        <li class="flex items-start"><span class="text-palette-red text-2xl mr-2">📱</span> <div><strong>Tecnología y Redes Sociales:</strong> Notificaciones constantes y el diseño adictivo de las plataformas fragmentan la atención.</div></li>
+                        <li class="flex items-start"><span class="text-palette-red text-2xl mr-2">😴</span> <div><strong>Estilo de Vida:</strong> Falta de sueño, estrés, mala nutrición/hidratación y sedentarismo merman la capacidad de enfoque.</div></li>
+                        <li class="flex items-start"><span class="text-palette-red text-2xl mr-2">🌳</span> <div><strong>Entorno:</strong> Un espacio de estudio ruidoso, desordenado o con muchas distracciones dificulta la concentración.</div></li>
+                        <li class="flex items-start"><span class="text-palette-red text-2xl mr-2">❤️</span> <div><strong>Factores Personales:</strong> La edad, el nivel de interés en la tarea y condiciones como el TDAH influyen significativamente.</div></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <section id="consecuencias" class="mb-12">
+            <h2 class="text-3xl font-bold text-header text-center mb-2">El Efecto Dominó de una Mente Distraída</h2>
+            <div class="section-divider bg-palette-yellow mx-auto"></div>
+            <p class="text-center text-lg mb-8 max-w-3xl mx-auto">La falta de atención constante tiene repercusiones que van más allá de lo académico.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-palette-red">
+                    <h3 class="text-xl font-semibold text-subheader mb-3"><span class="text-2xl mr-2">📉</span>Rendimiento Académico</h3>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>Productividad reducida</li>
+                        <li>Aprendizaje superficial</li>
+                        <li>Calificaciones más bajas</li>
+                        <li>Mayor probabilidad de errores</li>
+                        <li>Dificultad para completar tareas</li>
+                    </ul>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-palette-yellow">
+                    <h3 class="text-xl font-semibold text-subheader mb-3"><span class="text-2xl mr-2">😟</span>Bienestar Mental</h3>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>Aumento del estrés y la ansiedad</li>
+                        <li>Sentimientos de frustración</li>
+                        <li>Menor confianza en uno mismo</li>
+                        <li>Riesgo de agotamiento académico</li>
+                        <li>Posible impacto en síntomas depresivos</li>
+                    </ul>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-palette-green">
+                    <h3 class="text-xl font-semibold text-subheader mb-3"><span class="text-2xl mr-2">🤝</span>Vida Personal</h3>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>Impacto en relaciones sociales</li>
+                        <li>Dificultades en la toma de decisiones</li>
+                        <li>Olvidos frecuentes</li>
+                        <li>Menor calidad en interacciones</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="estrategias" class="mb-12">
+            <h2 class="text-3xl font-bold text-header text-center mb-2">¡Es Hora de Actuar! Estrategias para Blindar Tu Atención</h2>
+            <div class="section-divider bg-palette-blue mx-auto"></div>
+            <p class="text-center text-lg mb-8 max-w-3xl mx-auto">Cultivar una atención más fuerte es un proceso gradual. ¡Empieza hoy con estas técnicas!</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <div class="bg-white rounded-lg shadow-md p-6 strategy-card">
+                    <h3 class="text-xl font-semibold text-subheader mb-3"><span class="text-3xl mr-2">🧘</span>Mindfulness y Meditación</h3>
+                    <p>Entrena tu cerebro para enfocarse en el presente. Prácticas como la respiración consciente o el escaneo corporal pueden mejorar significativamente la concentración y reducir la ansiedad.</p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 strategy-card">
+                    <h3 class="text-xl font-semibold text-subheader mb-3"><span class="text-3xl mr-2">🍅</span>Técnica Pomodoro</h3>
+                    <p>Trabaja en bloques de 25 min seguidos de descansos de 5 min. Después de 4 bloques, un descanso más largo. Ayuda a mantener la intensidad y evitar la fatiga.</p>
+                     <div class="mt-3 flex justify-around items-center text-center">
+                        <div class="p-2 bg-palette-green/20 rounded"> <span class="font-bold text-lg block">25</span> <span class="text-xs">Trabajo</span></div>
+                        <span class="text-palette-green text-2xl font-bold">&rarr;</span>
+                        <div class="p-2 bg-palette-yellow/30 rounded"> <span class="font-bold text-lg block">5</span> <span class="text-xs">Descanso</span></div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md p-6 strategy-card">
+                    <h3 class="text-xl font-semibold text-subheader mb-3"><span class="text-3xl mr-2">🌳</span>Descansos Efectivos (¡Naturaleza!)</h3>
+                    <p>Toma micro-descansos o descansos más largos. Salir al aire libre o incluso ver imágenes de la naturaleza puede restaurar tu atención.</p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 strategy-card">
+                    <h3 class="text-xl font-semibold text-subheader mb-3"><span class="text-3xl mr-2">🧩</span>Descomponer Tareas Grandes</h3>
+                    <p>Divide proyectos abrumadores en pasos más pequeños y manejables. Esto reduce la ansiedad y facilita la concentración en cada parte.</p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 strategy-card">
+                    <h3 class="text-xl font-semibold text-subheader mb-3"><span class="text-3xl mr-2">🎯</span>Establecer Metas Claras (SMART)</h3>
+                    <p>Define metas Específicas, Medibles, Alcanzables, Relevantes y con Plazo. Dan dirección y motivación, ayudando a resistir distracciones.</p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 strategy-card">
+                    <h3 class="text-xl font-semibold text-subheader mb-3"><span class="text-3xl mr-2">🎧</span>Aprendizaje y Escucha Activos</h3>
+                    <p>Participa activamente con el material: resume, cuestiona, enseña a otros. Al escuchar, mantente presente, parafrasea y haz preguntas.</p>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md p-6 strategy-card">
+                    <h3 class="text-xl font-semibold text-subheader mb-3"><span class="text-3xl mr-2">🤫</span>Optimizar Entorno de Estudio</h3>
+                    <p>Crea una zona tranquila, ordenada, bien iluminada y libre de distracciones. Un espacio dedicado ayuda a tu cerebro a entrar en "modo concentración".</p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 strategy-card">
+                    <h3 class="text-xl font-semibold text-subheader mb-3"><span class="text-3xl mr-2">🚫</span>Gestionar Distracciones Digitales</h3>
+                    <p>Desactiva notificaciones. Usa apps para bloquear sitios web (ej. Forest, Freedom). Programa tiempos "libres de pantalla".</p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 strategy-card">
+                    <h3 class="text-xl font-semibold text-subheader mb-3"><span class="text-3xl mr-2">😴</span>Priorizar el Sueño</h3>
+                    <p>Duerme 7-9 horas de calidad. Un horario regular y una rutina relajante antes de dormir son claves para una mente enfocada.</p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 strategy-card">
+                    <h3 class="text-xl font-semibold text-subheader mb-3"><span class="text-3xl mr-2">🏃</span>Actividad Física Regular</h3>
+                    <p>El ejercicio mejora la función cognitiva y la atención. Incluso descansos activos cortos (estiramientos, caminar) durante el estudio ayudan.</p>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md p-6 strategy-card">
+                    <h3 class="text-xl font-semibold text-subheader mb-3"><span class="text-3xl mr-2">💧</span>Nutrición e Hidratación</h3>
+                    <p>Bebe suficiente agua y mantén una dieta equilibrada. Incluso una deshidratación leve afecta la concentración.</p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 strategy-card">
+                    <h3 class="text-xl font-semibold text-subheader mb-3"><span class="text-3xl mr-2">💡</span>Limitar la Multitarea</h3>
+                    <p>Concéntrate en una sola tarea a la vez, especialmente para actividades académicas exigentes. Es más eficiente y mejora el aprendizaje profundo.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="conclusion" class="text-center py-10 bg-palette-navy text-white rounded-lg">
+            <h2 class="text-3xl font-bold mb-4">Tu Concentración, Tu Superpoder</h2>
+            <p class="text-lg max-w-2xl mx-auto mb-6 px-4">Mejorar tu capacidad de atención es un viaje de autodescubrimiento y esfuerzo constante. Al aplicar estas estrategias, no solo inviertes en tu éxito académico, sino en tu crecimiento personal y bienestar a largo plazo.</p>
+            <p class="text-xl font-semibold">¡Empodérate y toma el control de tu enfoque!</p>
+        </section>
+
+    </main>
+
+    <footer class="text-center p-6 text-sm text-slate-600 bg-slate-200">
+        <p>&copy; <span id="year"></span> Infografía sobre la Capacidad de Atención. Basada en el informe "Comprendiendo y Mejorando la Capacidad de Atención: Guía para Estudiantes".</p>
+    </footer>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        function wrapText(text, maxWidth) {
+            if (typeof text !== 'string') return text;
+            const words = text.split(' ');
+            let currentLine = '';
+            const lines = [];
+            words.forEach(word => {
+                if ((currentLine + ' ' + word).length > maxWidth && currentLine.length > 0) {
+                    lines.push(currentLine);
+                    currentLine = word;
+                } else {
+                    currentLine = currentLine.length === 0 ? word : currentLine + ' ' + word;
+                }
+            });
+            lines.push(currentLine);
+            return lines.length > 1 ? lines : text;
+        }
+        
+        const defaultTooltipCallbacks = {
+            title: function(tooltipItems) {
+                const item = tooltipItems[0];
+                let label = item.chart.data.labels[item.dataIndex];
+                if (Array.isArray(label)) {
+                  return label.join(' ');
+                } else {
+                  return label;
+                }
+            }
+        };
+
+        // Gráfico: Atención en la Era Digital
+        const atencionDigitalCtx = document.getElementById('atencionDigitalChart').getContext('2d');
+        new Chart(atencionDigitalCtx, {
+            type: 'bar',
+            data: {
+                labels: [wrapText('Promedio atención a una pantalla (2004)', 16), wrapText('Promedio atención a una pantalla (2023)', 16)],
+                datasets: [{
+                    label: 'Segundos',
+                    data: [150, 47],
+                    backgroundColor: ['#118AB2', '#FF6B6B'], // palette-blue, palette-red
+                    borderColor: ['#073B4C', '#B93C3C'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Segundos de Atención Promedio' }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { callbacks: defaultTooltipCallbacks }
+                }
+            }
+        });
+
+        // Gráfico: Impacto de Factores
+        const factoresImpactoCtx = document.getElementById('factoresImpactoChart').getContext('2d');
+        new Chart(factoresImpactoCtx, {
+            type: 'doughnut',
+            data: {
+                labels: [
+                    wrapText('Tecnología Digital', 16), 
+                    wrapText('Estilo de Vida (Sueño/Estrés)', 16), 
+                    wrapText('Entorno Físico', 16), 
+                    wrapText('Factores Personales (Interés/TDAH)', 16)
+                ],
+                datasets: [{
+                    label: 'Impacto en la Atención (Ilustrativo)',
+                    data: [35, 30, 20, 15], // Valores ilustrativos sumando 100%
+                    backgroundColor: ['#FF6B6B', '#FFD166', '#06D6A0', '#118AB2'],
+                     hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: { callbacks: defaultTooltipCallbacks }
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
